@@ -1,0 +1,25 @@
+{
+    "name": "ExamHub24 — Online Exam Test Series",
+    "short_name": "ExamHub24",
+    "description": "Mock tests, practice questions, current affairs and performance analytics for competitive exam preparation.",
+    "start_url": "/",
+    "scope": "/",
+    "display": "standalone",
+    "background_color": "#f7f9fc",
+    "theme_color": "#0d6efd",
+    "orientation": "portrait-primary",
+    "icons": [
+        {
+            "src": "/static/images/icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "/static/images/icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any"
+        }
+    ]
+}

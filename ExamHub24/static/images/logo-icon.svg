@@ -1,0 +1,13 @@
+<svg width="64" height="64" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="ehIconGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3b82f6"/>
+      <stop offset="100%" stop-color="#1d4ed8"/>
+    </linearGradient>
+  </defs>
+  <rect x="0" y="0" width="40" height="40" rx="10" fill="url(#ehIconGrad2)"/>
+  <path d="M20 10 L34 16.5 L20 23 L6 16.5 Z" fill="#ffffff"/>
+  <path d="M12 19.3 V26 C12 28.5 15.5 30.5 20 30.5 C24.5 30.5 28 28.5 28 26 V19.3 L20 23 Z" fill="#ffffff" opacity="0.92"/>
+  <line x1="34" y1="16.5" x2="34" y2="25" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round"/>
+  <circle cx="34" cy="26.3" r="1.6" fill="#ffffff"/>
+</svg>

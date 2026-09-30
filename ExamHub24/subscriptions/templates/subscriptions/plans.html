@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block content %}
+<h3 class="mb-4">Subscription Plans</h3>
+
+{% if active_sub %}
+<div class="alert alert-success">You currently have an active <strong>{{ active_sub.plan.name }}</strong> subscription, valid till {{ active_sub.end_date }} ({{ active_sub.days_remaining }} days remaining).</div>
+{% endif %}
+
+<div class="row">
+    {% for plan in plans %}
+    <div class="col-md-4 mb-3">
+        <div class="card h-100 shadow-sm text-center">
+            <div class="card-body">
+                <h5>{{ plan.name }}</h5>
+                <h3 class="text-primary">Rs. {{ plan.price }}</h3>
+                <p class="text-muted small">{{ plan.duration_days }} days validity</p>
+                <ul class="list-unstyled text-start small">
+                    {% for feature in plan.feature_list %}
+                    <li><i class="bi bi-check-circle-fill text-success"></i> {{ feature }}</li>
+                    {% endfor %}
+                </ul>
+                <a href="{% url 'subscriptions:plan_detail' plan.id %}" class="btn btn-primary w-100">Choose Plan</a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <p class="text-muted">No plans available yet. Add some from the admin panel.</p>
+    {% endfor %}
+</div>
+{% endblock %}

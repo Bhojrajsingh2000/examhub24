@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-5 text-center">
+        <h4>Redirecting to secure payment...</h4>
+        <p class="text-muted">Plan: {{ plan.name }} — Rs. {{ order.amount }}{% if order.coupon %} <span class="badge bg-success">Coupon {{ order.coupon.code }} applied</span>{% endif %}</p>
+    </div>
+</div>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+    var options = {
+        "key": "{{ razorpay_key_id }}",
+        "amount": "{{ amount_paise }}",
+        "currency": "INR",
+        "name": "ExamHub24",
+        "description": "{{ plan.name }} Subscription",
+        "order_id": "{{ razorpay_order_id }}",
+        "handler": function (response) {
+            var form = document.createElement('form');
+            form.method = 'POST';
+            form.action = "{% url 'payments:payment_callback' order.id %}";
+            var csrf = document.createElement('input');
+            csrf.type = 'hidden'; csrf.name = 'csrfmiddlewaretoken'; csrf.value = "{{ csrf_token }}";
+            form.appendChild(csrf);
+            ['razorpay_order_id', 'razorpay_payment_id', 'razorpay_signature'].forEach(function (key) {
+                var input = document.createElement('input');
+                input.type = 'hidden'; input.name = key; input.value = response[key];
+                form.appendChild(input);
+            });
+            document.body.appendChild(form);
+            form.submit();
+        },
+        "modal": {
+            "ondismiss": function () { window.location.href = "{% url 'subscriptions:plans' %}"; }
+        }
+    };
+    var rzp = new Razorpay(options);
+    rzp.open();
+</script>
+{% endblock %}

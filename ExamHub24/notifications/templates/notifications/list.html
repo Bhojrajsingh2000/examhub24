@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+<h3 class="mb-4">Notifications</h3>
+<div class="list-group">
+    {% for n in notifications %}
+    <div class="list-group-item">
+        <div class="d-flex justify-content-between">
+            <strong>{{ n.title }}</strong>
+            <small class="text-muted">{{ n.created_at|date:"d M, H:i" }}</small>
+        </div>
+        <p class="mb-0 small">{{ n.message }}</p>
+    </div>
+    {% empty %}
+    <div class="text-center text-muted py-5 w-100">
+        <i class="bi bi-bell-slash" style="font-size:2.5rem;"></i>
+        <p class="mt-2 mb-0">No notifications yet.</p>
+    </div>
+    {% endfor %}
+</div>
+{% include 'partials/pagination.html' %}
+{% endblock %}

@@ -1,0 +1,20 @@
+[run]
+source = .
+omit =
+    */migrations/*
+    */management/commands/*
+    manage.py
+    exam_prep/wsgi.py
+    exam_prep/asgi.py
+    */tests.py
+    venv/*
+    */__pycache__/*
+
+[report]
+exclude_lines =
+    pragma: no cover
+    def __repr__
+    raise NotImplementedError
+    if TYPE_CHECKING:
+show_missing = True
+skip_empty = True

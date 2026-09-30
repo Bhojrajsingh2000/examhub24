@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block content %}
+<h3>{{ exam.name }}</h3>
+<p class="text-muted">{{ exam.description }}</p>
+{% if exam.syllabus_pdf %}
+    <a href="{{ exam.syllabus_pdf.url }}" class="btn btn-outline-secondary btn-sm mb-3"><i class="bi bi-file-earmark-pdf"></i> Download Syllabus</a>
+{% endif %}
+{% if user.is_authenticated %}
+    <a href="{% url 'exams:syllabus_checklist' exam.slug %}" class="btn btn-outline-success btn-sm mb-3"><i class="bi bi-check2-square"></i> Track My Syllabus Progress</a>
+{% endif %}
+
+<h5 class="mt-4">Subjects</h5>
+<ul class="list-group mb-4">
+    {% for subject in subjects %}
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+        {{ subject.name }}
+        <div>
+            <a href="{% url 'questions:practice_session' subject.id %}" class="btn btn-sm btn-outline-secondary">Practice</a>
+            <a href="{% url 'mock_tests:sectional_test_builder' subject.id %}" class="btn btn-sm btn-outline-primary">Build Sectional Test</a>
+        </div>
+    </li>
+    {% empty %}
+    <li class="list-group-item text-muted">No subjects added yet.</li>
+    {% endfor %}
+</ul>
+
+<h5>Test Series</h5>
+<div class="row">
+    {% for series in test_series %}
+    <div class="col-md-4 mb-3">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body">
+                <h6 class="card-title">{{ series.title }}</h6>
+                <p class="small text-muted">{{ series.description|truncatewords:15 }}</p>
+                {% if series.is_free %}
+                    <span class="badge bg-success mb-2">Free</span>
+                {% else %}
+                    <span class="badge bg-warning text-dark mb-2">Premium — Rs. {{ series.price }}</span>
+                {% endif %}
+                <div>
+                    <a href="{% url 'mock_tests:series_detail' series.id %}" class="btn btn-primary btn-sm">View Tests</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <p class="text-muted">No test series available for this exam yet.</p>
+    {% endfor %}
+</div>
+{% endblock %}

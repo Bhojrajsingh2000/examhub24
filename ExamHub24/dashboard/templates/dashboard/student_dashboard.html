@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3>Welcome back, {{ user.full_name|default:user.username }}!</h3>
+    {% if has_active_subscription %}
+        <span class="badge bg-warning text-dark">Premium Member</span>
+    {% else %}
+        <a href="{% url 'subscriptions:plans' %}" class="btn btn-sm btn-warning">Upgrade to Premium</a>
+    {% endif %}
+</div>
+
+<div class="row text-center mb-4">
+    <div class="col-md-3 col-6 mb-3">
+        <div class="card shadow-sm p-3">
+            <h3 class="text-primary">{{ total_attempts }}</h3>
+            <small class="text-muted">Tests Attempted</small>
+        </div>
+    </div>
+    <div class="col-md-3 col-6 mb-3">
+        <div class="card shadow-sm p-3">
+            <h3>{{ avg_accuracy }}%</h3>
+            <small class="text-muted">Avg. Accuracy</small>
+        </div>
+    </div>
+    <div class="col-md-3 col-6 mb-3">
+        <div class="card shadow-sm p-3">
+            <h3>{{ in_progress|length }}</h3>
+            <small class="text-muted">Tests In Progress</small>
+        </div>
+    </div>
+    <div class="col-md-3 col-6 mb-3">
+        <div class="card shadow-sm p-3">
+            <h3>{{ unread_notifications|length }}</h3>
+            <small class="text-muted">New Notifications</small>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-7">
+        {% if in_progress %}
+        <div class="card shadow-sm mb-3">
+            <div class="card-body">
+                <h6>Resume Test</h6>
+                {% for attempt in in_progress %}
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span>{{ attempt.test.title }}</span>
+                    <a href="{% url 'mock_tests:attempt_test' attempt.id %}" class="btn btn-sm btn-warning">Resume</a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="card shadow-sm mb-3">
+            <div class="card-body">
+                <h6>Recent Results</h6>
+                <table class="table table-sm mb-0">
+                    <tbody>
+                        {% for attempt in recent_attempts %}
+                        <tr>
+                            <td>{{ attempt.test.title }}</td>
+                            <td>{{ attempt.total_score }} marks</td>
+                            <td>Rank #{{ attempt.rank|default:"-" }}</td>
+                            <td><a href="{% url 'results:result_detail' attempt.id %}" class="small">View</a></td>
+                        </tr>
+                        {% empty %}
+                        <tr><td class="text-muted">No tests attempted yet. <a href="{% url 'mock_tests:series_list' %}">Browse test series</a>.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% if recent_attempts %}<a href="{% url 'results:result_history' %}" class="small">View all results &raquo;</a>{% endif %}
+                <a href="{% url 'results:weekly_leaderboard' %}" class="small ms-2"><i class="bi bi-trophy"></i> Weekly Leaderboard</a>
+            </div>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h6>Subject-wise Performance</h6>
+                {% for p in performance %}
+                <div class="mb-2">
+                    <div class="d-flex justify-content-between small">
+                        <span>{{ p.subject.name }}</span>
+                        <span>{{ p.avg_score }}%</span>
+                    </div>
+                    <div class="progress" style="height:8px;">
+                        <div class="progress-bar {% if p.avg_score < 50 %}bg-danger{% elif p.avg_score < 75 %}bg-warning{% else %}bg-success{% endif %}" style="width:{{ p.avg_score }}%"></div>
+                    </div>
+                    {% if p.weak_topics %}<small class="text-danger">Weak: {{ p.weak_topics }}</small>{% endif %}
+                </div>
+                {% empty %}
+                <p class="text-muted small">Attempt a few tests to see your performance analytics here.</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        {% if recommendations %}
+        <div class="card shadow-sm mt-3">
+            <div class="card-body">
+                <h6><i class="bi bi-magic"></i> Recommended Practice</h6>
+                <p class="small text-muted">Based on your weak topics — a quick sectional test to shore them up.</p>
+                {% for rec in recommendations %}
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="small">{{ rec.topic_name }} <span class="text-muted">({{ rec.subject.name }})</span></span>
+                    {% if rec.tag_id %}
+                        <a href="{% url 'mock_tests:sectional_test_builder' rec.subject.id %}?tag={{ rec.tag_id }}" class="btn btn-sm btn-outline-primary">Practice</a>
+                    {% else %}
+                        <a href="{% url 'questions:practice_session' rec.subject.id %}" class="btn btn-sm btn-outline-primary">Practice</a>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="col-md-5">
+        <div class="card shadow-sm mb-3">
+            <div class="card-body">
+                <h6>Notifications</h6>
+                {% for n in unread_notifications %}
+                <div class="border-bottom py-2">
+                    <strong class="small">{{ n.title }}</strong>
+                    <p class="small mb-0 text-muted">{{ n.message|truncatewords:15 }}</p>
+                </div>
+                {% empty %}
+                <p class="text-muted small mb-0">No new notifications.</p>
+                {% endfor %}
+                <a href="{% url 'notifications:list' %}" class="small">View all &raquo;</a>
+            </div>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h6>Latest Current Affairs</h6>
+                {% for item in latest_affairs %}
+                <div class="border-bottom py-2">
+                    <a href="{% url 'current_affairs:detail' item.id %}" class="small text-decoration-none">{{ item.title }}</a>
+                </div>
+                {% empty %}
+                <p class="text-muted small mb-0">No current affairs published yet.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+<h3 class="mb-4">My Profile</h3>
+<div class="row">
+    <div class="col-md-7">
+        <div class="card shadow-sm mb-3">
+            <div class="card-body">
+                <h5>Personal Details</h5>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ user_form|crispy }}
+                    <h5 class="mt-4">Exam Preparation Details</h5>
+                    {{ profile_form|crispy }}
+                    <button type="submit" class="btn btn-primary mt-2">Save Changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-5">
+        <div class="card shadow-sm text-center">
+            <div class="card-body">
+                {% if user.profile_picture %}
+                    <img src="{{ user.profile_picture.url }}" class="rounded-circle mb-3" width="120" height="120" style="object-fit:cover;" alt="Your profile picture">
+                {% else %}
+                    <i class="bi bi-person-circle" style="font-size:120px;"></i>
+                {% endif %}
+                <h5>{{ user.full_name|default:user.username }}</h5>
+                <p class="text-muted mb-1">{{ user.email }}</p>
+                {% if user.is_premium %}
+                    <span class="badge bg-warning text-dark">Premium Member</span>
+                {% else %}
+                    <span class="badge bg-secondary">Free Member</span>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="card shadow-sm text-center mt-3">
+            <div class="card-body">
+                <h6><i class="bi bi-gift"></i> Refer &amp; Earn</h6>
+                <p class="small text-muted mb-2">Share your code — you and your friend both get free premium days when they sign up and verify.</p>
+                <div class="input-group">
+                    <input type="text" class="form-control text-center fw-bold" value="{{ student_profile.referral_code }}" id="referral-code-input" readonly>
+                    <button class="btn btn-outline-primary" type="button" onclick="navigator.clipboard.writeText(document.getElementById('referral-code-input').value); this.textContent='Copied!';">Copy</button>
+                </div>
+            </div>
+        </div>
+
+        {% if administered_institutions %}
+        <div class="card shadow-sm mt-3">
+            <div class="card-body">
+                <h6><i class="bi bi-building"></i> My Institutions</h6>
+                {% for inst in administered_institutions %}
+                <a href="{% url 'institutions:institution_dashboard' inst.id %}" class="d-block small mb-1">{{ inst.name }} ({{ inst.student_count }} students) &raquo;</a>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        {% if is_affiliate %}
+        <div class="card shadow-sm mt-3">
+            <div class="card-body">
+                <h6><i class="bi bi-graph-up-arrow"></i> Affiliate Program</h6>
+                <a href="{% url 'payments:affiliate_dashboard' %}" class="small">View my earnings dashboard &raquo;</a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

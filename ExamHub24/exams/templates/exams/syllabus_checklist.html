@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% block content %}
+<h3 class="mb-2"><i class="bi bi-check2-square"></i> {{ exam.name }} — Syllabus Tracker</h3>
+
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <div class="d-flex justify-content-between small mb-1">
+            <span>Overall Progress</span>
+            <span>{{ total_completed }} / {{ total_topics }} topics ({{ overall_pct }}%)</span>
+        </div>
+        <div class="progress" style="height:10px;">
+            <div class="progress-bar bg-success" style="width:{{ overall_pct }}%"></div>
+        </div>
+    </div>
+</div>
+
+{% for entry in subject_data %}
+<div class="card mb-3">
+    <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <h6 class="mb-0">{{ entry.subject.name }}</h6>
+            <span class="small text-muted">{{ entry.progress_pct }}%</span>
+        </div>
+        <div class="progress mb-3" style="height:6px;">
+            <div class="progress-bar" style="width:{{ entry.progress_pct }}%"></div>
+        </div>
+        {% for topic in entry.topics %}
+        <div class="form-check">
+            <input class="form-check-input topic-checkbox" type="checkbox" value=""
+                   id="topic_{{ topic.id }}" data-topic-id="{{ topic.id }}"
+                   {% if topic.id in entry.completed_topic_ids %}checked{% endif %}>
+            <label class="form-check-label {% if topic.id in entry.completed_topic_ids %}text-decoration-line-through text-muted{% endif %}" for="topic_{{ topic.id }}">
+                {{ topic.name }}
+            </label>
+        </div>
+        {% empty %}
+        <p class="small text-muted mb-0">No syllabus topics added for this subject yet.</p>
+        {% endfor %}
+    </div>
+</div>
+{% empty %}
+<p class="text-muted">No subjects found for this exam.</p>
+{% endfor %}
+
+{% endblock %}
+{% block extra_js %}
+<script>
+document.querySelectorAll('.topic-checkbox').forEach(function (cb) {
+    cb.addEventListener('change', function () {
+        var topicId = cb.dataset.topicId;
+        var label = document.querySelector('label[for="topic_' + topicId + '"]');
+        fetch('/exams/syllabus/topic/' + topicId + '/toggle/', {
+            method: 'POST',
+            headers: { 'X-CSRFToken': '{{ csrf_token }}' },
+        }).then(function (res) { return res.json(); }).then(function (data) {
+            label.classList.toggle('text-decoration-line-through', data.is_completed);
+            label.classList.toggle('text-muted', data.is_completed);
+        });
+    });
+});
+</script>
+{% endblock %}

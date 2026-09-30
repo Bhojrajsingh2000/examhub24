@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block content %}
+<h3 class="mb-4">Admin Activity Log</h3>
+<table class="table table-sm bg-white shadow-sm">
+    <thead>
+        <tr><th>When</th><th>User</th><th>Action</th><th>Item</th></tr>
+    </thead>
+    <tbody>
+        {% for entry in entries %}
+        <tr>
+            <td class="small text-muted">{{ entry.action_time|date:"d M Y, H:i" }}</td>
+            <td>{{ entry.user }}</td>
+            <td>
+                {% if entry.action_flag == 1 %}<span class="badge bg-success">Added</span>
+                {% elif entry.action_flag == 2 %}<span class="badge bg-primary">Changed</span>
+                {% else %}<span class="badge bg-danger">Deleted</span>{% endif %}
+            </td>
+            <td>{{ entry.content_type }} — {{ entry.object_repr }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="4" class="text-muted">No admin activity recorded yet.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% include 'partials/pagination.html' %}
+{% endblock %}

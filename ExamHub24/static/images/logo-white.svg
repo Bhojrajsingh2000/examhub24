@@ -1,0 +1,15 @@
+<svg width="220" height="48" viewBox="0 0 220 48" xmlns="http://www.w3.org/2000/svg">
+  <!-- Icon on translucent white circle -->
+  <g transform="translate(2,4)">
+    <rect x="0" y="0" width="40" height="40" rx="10" fill="rgba(255,255,255,0.18)"/>
+    <path d="M20 10 L34 16.5 L20 23 L6 16.5 Z" fill="#ffffff"/>
+    <path d="M12 19.3 V26 C12 28.5 15.5 30.5 20 30.5 C24.5 30.5 28 28.5 28 26 V19.3 L20 23 Z" fill="#ffffff" opacity="0.92"/>
+    <line x1="34" y1="16.5" x2="34" y2="25" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round"/>
+    <circle cx="34" cy="26.3" r="1.6" fill="#ffffff"/>
+  </g>
+
+  <!-- Wordmark (white, with amber accent on "24") -->
+  <text x="52" y="24" font-family="'Segoe UI', Arial, sans-serif" font-size="20" font-weight="700" fill="#ffffff">ExamHub</text>
+  <text x="152" y="24" font-family="'Segoe UI', Arial, sans-serif" font-size="20" font-weight="700" fill="#fbbf24">24</text>
+  <text x="52" y="38" font-family="'Segoe UI', Arial, sans-serif" font-size="9" font-weight="500" fill="#dbeafe" letter-spacing="0.5">CRACK YOUR EXAM, TOGETHER</text>
+</svg>

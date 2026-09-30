@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="mb-0">Leaderboard</h3>
+    <a href="{% url 'results:weekly_leaderboard' %}" class="btn btn-sm btn-outline-primary"><i class="bi bi-trophy"></i> Weekly Leaderboard</a>
+</div>
+<table class="table bg-white shadow-sm">
+    <thead>
+        <tr><th>Rank</th><th>Student</th><th>Score</th><th>Accuracy</th></tr>
+    </thead>
+    <tbody>
+        {% for attempt in top_attempts %}
+        <tr class="{% if attempt.user == request.user %}table-primary{% endif %}">
+            <td>#{{ attempt.rank }}</td>
+            <td>{{ attempt.user.full_name|default:attempt.user.username }}</td>
+            <td>{{ attempt.total_score }}</td>
+            <td>{{ attempt.accuracy }}%</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="4" class="text-muted">No attempts yet for this test.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% include 'partials/pagination.html' %}
+{% endblock %}

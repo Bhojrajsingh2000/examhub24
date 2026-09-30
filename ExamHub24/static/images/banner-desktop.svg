@@ -1,0 +1,90 @@
+<svg width="1600" height="460" viewBox="0 0 1600 460" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgGradD" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e3a8a"/>
+      <stop offset="55%" stop-color="#1d4ed8"/>
+      <stop offset="100%" stop-color="#2563eb"/>
+    </linearGradient>
+    <linearGradient id="screenGradD" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#f8fafc"/>
+      <stop offset="100%" stop-color="#e2e8f0"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1600" height="460" fill="url(#bgGradD)"/>
+
+  <!-- decorative blobs -->
+  <circle cx="120" cy="80" r="140" fill="#ffffff" opacity="0.05"/>
+  <circle cx="1500" cy="60" r="90" fill="#fbbf24" opacity="0.12"/>
+  <circle cx="220" cy="420" r="180" fill="#ffffff" opacity="0.04"/>
+  <circle cx="1050" cy="430" r="60" fill="#22c55e" opacity="0.10"/>
+
+  <!-- scattered dot grid (left side, behind text area) -->
+  <g fill="#ffffff" opacity="0.18">
+    <circle cx="60" cy="220" r="4"/><circle cx="90" cy="220" r="4"/><circle cx="120" cy="220" r="4"/>
+    <circle cx="60" cy="250" r="4"/><circle cx="90" cy="250" r="4"/><circle cx="120" cy="250" r="4"/>
+    <circle cx="60" cy="280" r="4"/><circle cx="90" cy="280" r="4"/><circle cx="120" cy="280" r="4"/>
+  </g>
+
+  <!-- Device mockup (right side) -->
+  <g transform="translate(980,55)">
+    <rect x="0" y="0" width="480" height="350" rx="22" fill="#0f172a"/>
+    <rect x="16" y="16" width="448" height="318" rx="10" fill="url(#screenGradD)"/>
+
+    <!-- top progress bar -->
+    <rect x="36" y="36" width="408" height="10" rx="5" fill="#cbd5e1"/>
+    <rect x="36" y="36" width="270" height="10" rx="5" fill="#2563eb"/>
+
+    <!-- question block -->
+    <rect x="36" y="66" width="408" height="14" rx="4" fill="#334155"/>
+    <rect x="36" y="88" width="300" height="14" rx="4" fill="#334155"/>
+
+    <!-- options -->
+    <g>
+      <rect x="36" y="122" width="408" height="42" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+      <circle cx="58" cy="143" r="8" fill="none" stroke="#94a3b8" stroke-width="2.5"/>
+      <rect x="80" y="137" width="220" height="12" rx="4" fill="#94a3b8"/>
+    </g>
+    <g>
+      <rect x="36" y="174" width="408" height="42" rx="10" fill="#dcfce7" stroke="#22c55e" stroke-width="2.5"/>
+      <circle cx="58" cy="195" r="8" fill="#22c55e"/>
+      <path d="M54 195 l3 3 l6 -7" stroke="#ffffff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      <rect x="80" y="189" width="180" height="12" rx="4" fill="#16a34a"/>
+    </g>
+    <g>
+      <rect x="36" y="226" width="408" height="42" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+      <circle cx="58" cy="247" r="8" fill="none" stroke="#94a3b8" stroke-width="2.5"/>
+      <rect x="80" y="241" width="250" height="12" rx="4" fill="#94a3b8"/>
+    </g>
+
+    <!-- bottom buttons -->
+    <rect x="36" y="286" width="130" height="34" rx="8" fill="#e2e8f0"/>
+    <rect x="318" y="286" width="126" height="34" rx="8" fill="#2563eb"/>
+  </g>
+
+  <!-- floating score badge -->
+  <g transform="translate(900,40)">
+    <rect x="0" y="0" width="150" height="86" rx="16" fill="#ffffff"/>
+    <circle cx="38" cy="43" r="26" fill="none" stroke="#22c55e" stroke-width="7"/>
+    <path d="M27 43 l8 8 l16 -18" stroke="#22c55e" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="76" y="26" width="58" height="10" rx="5" fill="#0f172a" opacity="0.7"/>
+    <rect x="76" y="44" width="42" height="8" rx="4" fill="#94a3b8"/>
+  </g>
+
+  <!-- floating rank/star badge -->
+  <g transform="translate(1400,300)">
+    <rect x="0" y="0" width="130" height="86" rx="16" fill="#ffffff"/>
+    <path d="M35 20 l7 14 l16 2 l-12 11 l3 16 l-14 -8 l-14 8 l3 -16 l-12 -11 l16 -2 Z" fill="#fbbf24"/>
+    <rect x="70" y="24" width="46" height="9" rx="4" fill="#0f172a" opacity="0.7"/>
+    <rect x="70" y="40" width="34" height="7" rx="3" fill="#94a3b8"/>
+    <rect x="70" y="53" width="50" height="7" rx="3" fill="#94a3b8"/>
+  </g>
+
+  <!-- clock/timer badge -->
+  <g transform="translate(1130,20)">
+    <circle cx="30" cy="30" r="30" fill="#ffffff"/>
+    <circle cx="30" cy="30" r="19" fill="none" stroke="#2563eb" stroke-width="4"/>
+    <line x1="30" y1="30" x2="30" y2="18" stroke="#2563eb" stroke-width="3" stroke-linecap="round"/>
+    <line x1="30" y1="30" x2="39" y2="34" stroke="#2563eb" stroke-width="3" stroke-linecap="round"/>
+  </g>
+</svg>

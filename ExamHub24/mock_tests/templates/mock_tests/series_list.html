@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block content %}
+<h3 class="mb-3">All Test Series</h3>
+
+<form method="get" class="mb-4 row g-2 align-items-center">
+    <div class="col-md-5">
+        <div class="input-group">
+            <input type="text" name="q" value="{{ query }}" class="form-control" placeholder="Search test series or exam...">
+            <button type="submit" class="btn btn-primary"><i class="bi bi-search"></i></button>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <select name="type" class="form-select" onchange="this.form.submit()">
+            <option value="">All Types</option>
+            {% for value, label in series_types %}
+            <option value="{{ value }}" {% if series_type == value %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-md-3">
+        <select name="sort" class="form-select" onchange="this.form.submit()">
+            <option value="newest" {% if sort == "newest" %}selected{% endif %}>Newest First</option>
+            <option value="oldest" {% if sort == "oldest" %}selected{% endif %}>Oldest First</option>
+            <option value="price_asc" {% if sort == "price_asc" %}selected{% endif %}>Price: Low to High</option>
+            <option value="price_desc" {% if sort == "price_desc" %}selected{% endif %}>Price: High to Low</option>
+        </select>
+    </div>
+    <div class="col-md-1">
+        {% if query or series_type %}<a href="{% url 'mock_tests:series_list' %}" class="btn btn-outline-secondary btn-sm">Clear</a>{% endif %}
+    </div>
+</form>
+
+<div class="row">
+    {% for series in all_series %}
+    <div class="col-md-4 mb-3">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">{{ series.title }}</h5>
+                <p class="small text-muted">{{ series.exam.name }}</p>
+                <p class="small">{{ series.description|truncatewords:15 }}</p>
+                <span class="badge bg-light text-dark border mb-2">{{ series.get_series_type_display }}</span>
+                {% if series.is_free %}
+                    <span class="badge bg-success mb-2">Free</span>
+                {% else %}
+                    <span class="badge bg-warning text-dark mb-2">Premium — Rs. {{ series.price }}</span>
+                {% endif %}
+                <div>
+                    <a href="{% url 'mock_tests:series_detail' series.id %}" class="btn btn-primary btn-sm">View Tests</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <p class="text-muted">{% if query %}No test series match "{{ query }}".{% else %}No test series available yet. Add some from the admin panel.{% endif %}</p>
+    {% endfor %}
+</div>
+{% include 'partials/pagination.html' %}
+{% endblock %}

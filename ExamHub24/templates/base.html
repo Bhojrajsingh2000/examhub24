@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en" data-bs-theme="light" id="html-root">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+        // Applied before the stylesheets/body render to avoid a light-mode flash for
+        // users who previously chose dark mode (see static/js/main.js for the toggle).
+        (function () {
+            var saved = localStorage.getItem('examhub24-theme');
+            if (saved === 'dark') document.documentElement.setAttribute('data-bs-theme', 'dark');
+        })();
+    </script>
+    <title>{% block title %}{{ SITE_NAME }} — Online Competitive Exam Test Series{% endblock %}</title>
+    <link rel="icon" type="image/svg+xml" href="{% static 'images/logo-icon.svg' %}">
+    <link rel="apple-touch-icon" href="{% static 'images/icon-192.png' %}">
+    <link rel="manifest" href="{% static 'manifest.json' %}">
+    <meta name="theme-color" content="#0d6efd">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <a class="visually-hidden-focusable skip-to-content" href="#main-content">Skip to main content</a>
+    {% include 'navbar.html' %}
+
+    <main class="container my-4" id="main-content" role="main">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert" aria-live="polite">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    {% include 'footer.html' %}
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+    <script>
+        // Registers the service worker for offline app-shell support (see
+        // core/service_worker.js). Registered from the site root so its scope covers
+        // the whole site — silently no-ops on browsers without service worker support.
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function () {
+                navigator.serviceWorker.register('/service-worker.js').catch(function () {
+                    // Offline support is a progressive enhancement — failing silently
+                    // here must never block the page from working normally.
+                });
+            });
+        }
+    </script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <h3 class="mb-3 text-center">Login to ExamHub24</h3>
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <button type="submit" class="btn btn-primary w-100 mt-2">Login</button>
+                </form>
+                <p class="text-center mt-3 mb-1"><a href="{% url 'accounts:password_reset' %}">Forgot password?</a></p>
+                <p class="text-center mb-0">New here? <a href="{% url 'accounts:register' %}">Create an account</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

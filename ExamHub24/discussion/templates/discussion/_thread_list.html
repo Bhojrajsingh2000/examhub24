@@ -1,0 +1,77 @@
+{% load static %}
+<div class="discussion-thread">
+    {% for comment in threads %}
+    <div class="border rounded p-3 mb-2">
+        <div class="d-flex justify-content-between">
+            <strong class="small">{{ comment.user.full_name|default:comment.user.username }}</strong>
+            <small class="text-muted">{{ comment.created_at|timesince }} ago</small>
+        </div>
+        <p class="mb-2 small">{{ comment.comment }}</p>
+        <div class="d-flex gap-2">
+            <button type="button" class="btn btn-sm btn-link p-0 like-btn" data-discussion-id="{{ comment.id }}">
+                <i class="bi bi-hand-thumbs-up"></i> <span class="like-count">{{ comment.like_count }}</span>
+            </button>
+            <button type="button" class="btn btn-sm btn-link p-0 text-muted reply-toggle" data-comment-id="{{ comment.id }}">Reply</button>
+            <button type="button" class="btn btn-sm btn-link p-0 text-muted flag-btn" data-discussion-id="{{ comment.id }}">Report</button>
+        </div>
+
+        {% if user.is_authenticated %}
+        <form method="post" action="{% url 'discussion:post_comment' question.id %}" class="reply-form mt-2 d-none" id="reply-form-{{ comment.id }}">
+            {% csrf_token %}
+            <input type="hidden" name="parent_id" value="{{ comment.id }}">
+            <div class="input-group input-group-sm">
+                <input type="text" name="comment" class="form-control" placeholder="Write a reply..." required>
+                <button type="submit" class="btn btn-outline-primary">Reply</button>
+            </div>
+        </form>
+        {% endif %}
+
+        {% for reply in comment.replies.all %}
+        <div class="ms-4 mt-2 border-start ps-3">
+            <div class="d-flex justify-content-between">
+                <strong class="small">{{ reply.user.full_name|default:reply.user.username }}</strong>
+                <small class="text-muted">{{ reply.created_at|timesince }} ago</small>
+            </div>
+            <p class="mb-1 small">{{ reply.comment }}</p>
+            <button type="button" class="btn btn-sm btn-link p-0 like-btn" data-discussion-id="{{ reply.id }}">
+                <i class="bi bi-hand-thumbs-up"></i> <span class="like-count">{{ reply.like_count }}</span>
+            </button>
+        </div>
+        {% endfor %}
+    </div>
+    {% empty %}
+    <div class="text-center text-muted py-4">
+        <i class="bi bi-chat-square-text" style="font-size:2rem;"></i>
+        <p class="mt-2 mb-0">No discussion yet — be the first to ask a doubt or share a tip.</p>
+    </div>
+    {% endfor %}
+</div>
+
+<script>
+(function () {
+    document.querySelectorAll('.reply-toggle').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            document.getElementById('reply-form-' + btn.dataset.commentId).classList.toggle('d-none');
+        });
+    });
+    document.querySelectorAll('.like-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            fetch('/discussion/comment/' + btn.dataset.discussionId + '/like/', {
+                method: 'POST',
+                headers: { 'X-CSRFToken': '{{ csrf_token }}' },
+            }).then(function (r) { return r.json(); }).then(function (data) {
+                btn.querySelector('.like-count').textContent = data.like_count;
+            });
+        });
+    });
+    document.querySelectorAll('.flag-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            if (!confirm('Report this comment for admin review?')) return;
+            fetch('/discussion/comment/' + btn.dataset.discussionId + '/flag/', {
+                method: 'POST',
+                headers: { 'X-CSRFToken': '{{ csrf_token }}' },
+            }).then(function () { btn.textContent = 'Reported'; btn.disabled = true; });
+        });
+    });
+})();
+</script>

@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block content %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'exams:category_list' %}">Exam Categories</a></li>
+        <li class="breadcrumb-item active">{{ category.name }}</li>
+    </ol>
+</nav>
+<h3 class="mb-4">{{ category.name }} Exams</h3>
+<div class="row">
+    {% for exam in exams %}
+    <div class="col-md-4 mb-3">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">{{ exam.name }}</h5>
+                <p class="card-text text-muted small">{{ exam.description|truncatewords:15 }}</p>
+                {% if exam.exam_date %}<p class="small">Exam Date: {{ exam.exam_date }}</p>{% endif %}
+                <a href="{% url 'exams:exam_detail' exam.slug %}" class="btn btn-outline-primary btn-sm">View Details</a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <p class="text-muted">No exams found in this category yet.</p>
+    {% endfor %}
+</div>
+{% endblock %}

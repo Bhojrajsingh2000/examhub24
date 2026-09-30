@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block content %}
+<h3 class="mb-1"><i class="bi bi-building"></i> {{ institution.name }}</h3>
+<p class="text-muted mb-4">Institution code: <strong>{{ institution.code }}</strong> — share this with your students so they link their accounts at signup.</p>
+
+<div class="row text-center mb-4">
+    <div class="col-md-3 col-6 mb-3"><div class="card shadow-sm p-3"><h3>{{ total_students }}</h3><small class="text-muted">Students</small></div></div>
+    <div class="col-md-3 col-6 mb-3"><div class="card shadow-sm p-3"><h3>{{ premium_students }}</h3><small class="text-muted">Premium Students</small></div></div>
+    <div class="col-md-3 col-6 mb-3"><div class="card shadow-sm p-3"><h3>{{ total_attempts }}</h3><small class="text-muted">Tests Attempted</small></div></div>
+    <div class="col-md-3 col-6 mb-3"><div class="card shadow-sm p-3"><h3>{{ avg_accuracy }}%</h3><small class="text-muted">Avg. Accuracy</small></div></div>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <h6>Top Performers</h6>
+        <table class="table table-sm">
+            <thead><tr><th>Student</th><th>Tests Taken</th><th>Avg. Score</th></tr></thead>
+            <tbody>
+                {% for row in top_performers %}
+                <tr>
+                    <td>{{ row.user__full_name|default:row.user__username }}</td>
+                    <td>{{ row.tests_taken }}</td>
+                    <td>{{ row.avg_score|floatformat:2 }}</td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="3" class="text-muted">No attempts yet from this institution's students.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block content %}
+<h3 class="mb-4">Search Results {% if query %}for "{{ query }}"{% endif %}</h3>
+
+{% if not query %}
+<p class="text-muted">Enter a search term above.</p>
+{% elif total_results == 0 %}
+<div class="text-center text-muted py-5">
+    <i class="bi bi-search" style="font-size:2.5rem;"></i>
+    <p class="mt-2">No results found for "{{ query }}". Try a different term.</p>
+</div>
+{% else %}
+
+{% if results.exams %}
+<h6 class="mt-4"><i class="bi bi-mortarboard"></i> Exams</h6>
+<div class="list-group mb-3">
+    {% for exam in results.exams %}
+    <a href="{% url 'exams:exam_detail' exam.slug %}" class="list-group-item list-group-item-action">
+        {{ exam.name }} <span class="text-muted small">({{ exam.category.name }})</span>
+    </a>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% if results.test_series %}
+<h6 class="mt-4"><i class="bi bi-journal-check"></i> Test Series</h6>
+<div class="list-group mb-3">
+    {% for series in results.test_series %}
+    <a href="{% url 'mock_tests:series_detail' series.id %}" class="list-group-item list-group-item-action">
+        {{ series.title }} <span class="text-muted small">({{ series.exam.name }})</span>
+    </a>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% if results.current_affairs %}
+<h6 class="mt-4"><i class="bi bi-newspaper"></i> Current Affairs</h6>
+<div class="list-group mb-3">
+    {% for item in results.current_affairs %}
+    <a href="{% url 'current_affairs:detail' item.id %}" class="list-group-item list-group-item-action">
+        {{ item.title }} <span class="text-muted small">({{ item.date }})</span>
+    </a>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% if results.study_material %}
+<h6 class="mt-4"><i class="bi bi-file-earmark-text"></i> Study Material</h6>
+<div class="list-group mb-3">
+    {% for material in results.study_material %}
+    <a href="{% url 'study_material:list' %}?subject={{ material.subject_id }}" class="list-group-item list-group-item-action">
+        {{ material.title }} <span class="text-muted small">({{ material.subject.name }})</span>
+    </a>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% endif %}
+{% endblock %}

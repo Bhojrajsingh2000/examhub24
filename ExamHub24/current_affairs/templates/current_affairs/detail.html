@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block content %}
+<a href="{% url 'current_affairs:list' %}" class="btn btn-sm btn-outline-secondary mb-3">&laquo; Back</a>
+<h3>{{ affair.title }}</h3>
+<p class="text-muted small">{{ affair.date }} &middot; {{ affair.get_category_display }}</p>
+{% if affair.image %}<img src="{{ affair.image.url }}" class="img-fluid rounded mb-3" style="max-height:350px;" alt="{{ affair.title }}">{% endif %}
+<p style="white-space: pre-line;">{{ affair.content }}</p>
+{% if affair.source_link %}<a href="{{ affair.source_link }}" target="_blank" class="small">Source</a>{% endif %}
+{% endblock %}

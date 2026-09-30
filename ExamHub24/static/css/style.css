@@ -1,0 +1,82 @@
+body {
+    font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+    background-color: #f7f9fc;
+}
+
+[data-bs-theme="dark"] body {
+    background-color: #121417;
+}
+
+/* ---- Accessibility: skip-to-content link ----
+   Hidden until keyboard-focused (Bootstrap's .visually-hidden-focusable handles the
+   hide/show), so sighted mouse users never see it but keyboard/screen-reader users can
+   jump straight past the navbar to the page content. */
+.skip-to-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2000;
+    padding: 10px 16px;
+    background: #0d6efd;
+    color: #fff;
+    text-decoration: none;
+}
+
+.navbar-brand {
+    letter-spacing: 0.5px;
+}
+
+.card {
+    border: 1px solid #dee2e6;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+[data-bs-theme="dark"] .card {
+    border-color: #2d333b;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+}
+
+.card:hover {
+    box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+    transition: box-shadow 0.2s ease-in-out;
+}
+
+/* ---- Homepage hero banner ---- */
+.hero-banner {
+    min-height: 440px;
+    border-radius: 18px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    overflow: hidden;
+}
+
+.hero-banner .hero-text {
+    max-width: 620px;
+}
+
+/* ---- Test attempt screen ---- */
+#timer-box {
+    font-size: 1.4rem;
+    font-weight: bold;
+    background: #dc3545;
+    color: #fff;
+    padding: 6px 16px;
+    border-radius: 6px;
+}
+
+.q-nav-btn {
+    width: 42px;
+    height: 42px;
+    margin: 3px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    background: #fff;
+}
+
+.q-nav-btn.answered { background: #198754; color: #fff; }
+.q-nav-btn.marked { background: #ffc107; color: #000; }
+.q-nav-btn.not-answered { background: #dc3545; color: #fff; }
+.q-nav-btn.not-visited { background: #fff; color: #000; }
+.q-nav-btn.current { outline: 3px solid #0d6efd; }

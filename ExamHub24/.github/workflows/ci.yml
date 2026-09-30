@@ -1,0 +1,52 @@
+name: ExamHub24 CI
+
+# Runs the full test suite automatically on every push and pull request, so a broken
+# change (e.g. a mistake in the scoring engine) is caught before it ever reaches
+# PythonAnywhere. This is the same test command deploy.sh runs locally before deploying.
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+    branches: ['**']
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install coverage
+
+      - name: Run migrations (SQLite — no external DB needed for CI)
+        env:
+          SECRET_KEY: ci-test-secret-key-not-for-production
+          DEBUG: 'True'
+        run: python manage.py migrate
+
+      - name: Run test suite with coverage
+        env:
+          SECRET_KEY: ci-test-secret-key-not-for-production
+          DEBUG: 'True'
+        run: |
+          coverage run manage.py test
+          coverage report -m
+          coverage xml
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage.xml

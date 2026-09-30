@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% block content %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'questions:practice_subject_list' %}">Practice Mode</a></li>
+        <li class="breadcrumb-item active">{{ subject.name }}</li>
+    </ol>
+</nav>
+
+{% if not question %}
+    <div class="text-center text-muted py-5">
+        <i class="bi bi-inbox" style="font-size:2.5rem;"></i>
+        <p class="mt-2">No questions available in this subject yet.</p>
+    </div>
+{% else %}
+<div class="card shadow-sm">
+    <div class="card-body">
+        <div class="d-flex justify-content-between">
+            <span class="badge bg-light text-dark border">{{ question.get_difficulty_level_display }}</span>
+            <form method="post" action="{% url 'questions:bookmark_toggle' question.id %}" id="bookmark-form">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-sm {% if is_bookmarked %}btn-warning{% else %}btn-outline-warning{% endif %}">
+                    <i class="bi bi-bookmark-star"></i> {% if is_bookmarked %}Bookmarked{% else %}Bookmark{% endif %}
+                </button>
+            </form>
+        </div>
+
+        <p class="fs-5 mt-3">{{ question.question_text }}</p>
+        {% if question.question_image %}<img src="{{ question.question_image.url }}" class="img-fluid mb-3" style="max-height:250px;" alt="Image accompanying this question">{% endif %}
+
+        {% if feedback %}
+            <div class="alert {% if feedback.is_correct %}alert-success{% else %}alert-danger{% endif %}">
+                {% if feedback.is_correct %}
+                    <i class="bi bi-check-circle-fill"></i> Correct!
+                {% else %}
+                    <i class="bi bi-x-circle-fill"></i> Not quite. The correct answer is: <strong>{{ question.correct_answer_text }}</strong>
+                {% endif %}
+            </div>
+            {% if question.explanation %}
+                <p class="small text-muted"><strong>Explanation:</strong> {{ question.explanation }}</p>
+            {% endif %}
+            {% if question.video_solution_url %}
+                <a href="{{ question.video_solution_url }}" target="_blank" class="small"><i class="bi bi-play-circle"></i> Watch video solution</a>
+            {% endif %}
+            <div class="mt-2">
+                <a href="{% url 'discussion:question_discussion' question.id %}" class="small"><i class="bi bi-chat-dots"></i> Discuss this question</a>
+            </div>
+            <div class="mt-3">
+                <a href="{% url 'questions:practice_session' subject.id %}" class="btn btn-primary">Next Question &raquo;</a>
+            </div>
+        {% else %}
+            <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="question_id" value="{{ question.id }}">
+                {% for opt in "ABCD" %}
+                <div class="form-check mb-2">
+                    <input class="form-check-input" type="radio" name="selected_option" id="opt_{{ opt }}" value="{{ opt }}" required>
+                    <label class="form-check-label" for="opt_{{ opt }}">
+                        {% if opt == "A" %}{{ question.option_a }}{% elif opt == "B" %}{{ question.option_b }}{% elif opt == "C" %}{{ question.option_c }}{% else %}{{ question.option_d }}{% endif %}
+                    </label>
+                </div>
+                {% endfor %}
+                <button type="submit" class="btn btn-primary mt-2">Check Answer</button>
+            </form>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+{% endblock %}

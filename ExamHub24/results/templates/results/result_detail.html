@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block extra_css %}
+<style>
+@media print {
+    .no-print { display: none !important; }
+    .navbar, footer { display: none !important; }
+    body { background: #fff !important; }
+}
+</style>
+{% endblock %}
+{% block content %}
+<nav aria-label="breadcrumb" class="no-print">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'dashboard:home' %}">Dashboard</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'results:result_history' %}">My Results</a></li>
+        <li class="breadcrumb-item active">{{ attempt.test.title }}</li>
+    </ol>
+</nav>
+<div id="printable-result">
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <div class="d-flex justify-content-between align-items-start flex-wrap">
+            <h4>{{ attempt.test.title }} — Result</h4>
+            <button onclick="window.print()" class="btn btn-outline-secondary btn-sm no-print"><i class="bi bi-printer"></i> Print / Save as PDF</button>
+        </div>
+        <div class="row text-center mt-3">
+            <div class="col-md-2 col-4 mb-3">
+                <h3 class="text-primary">{{ attempt.total_score }}</h3>
+                <small class="text-muted">Score</small>
+            </div>
+            <div class="col-md-2 col-4 mb-3">
+                <h3>{{ attempt.accuracy }}%</h3>
+                <small class="text-muted">Accuracy</small>
+            </div>
+            <div class="col-md-2 col-4 mb-3">
+                <h3 class="text-success">{{ attempt.correct_count }}</h3>
+                <small class="text-muted">Correct</small>
+            </div>
+            <div class="col-md-2 col-4 mb-3">
+                <h3 class="text-danger">{{ attempt.wrong_count }}</h3>
+                <small class="text-muted">Wrong</small>
+            </div>
+            <div class="col-md-2 col-4 mb-3">
+                <h3 class="text-secondary">{{ attempt.unattempted_count }}</h3>
+                <small class="text-muted">Unattempted</small>
+            </div>
+            <div class="col-md-2 col-4 mb-3">
+                <h3>#{{ attempt.rank|default:"-" }}</h3>
+                <small class="text-muted">Rank / {{ total_attempters }}</small>
+            </div>
+        </div>
+        <a href="{% url 'results:leaderboard' attempt.test.id %}" class="btn btn-outline-primary btn-sm no-print">View Leaderboard</a>
+        <a href="{% url 'results:result_history' %}" class="btn btn-outline-secondary btn-sm no-print">My Result History</a>
+    </div>
+</div>
+
+<h5 class="mb-3">Solutions</h5>
+{% for response in responses %}
+<div class="card mb-2">
+    <div class="card-body">
+        <div class="d-flex justify-content-between">
+            <p class="mb-2"><strong>Q{{ forloop.counter }}.</strong> {{ response.question.question_text }}</p>
+            <button type="button" class="btn btn-sm btn-link no-print bookmark-btn" data-question-id="{{ response.question.id }}"
+                    title="Bookmark for revision" aria-label="Bookmark this question for revision">
+                <i class="bi {% if response.question.id in bookmarked_qids %}bi-bookmark-star-fill text-warning{% else %}bi-bookmark{% endif %}"></i>
+            </button>
+        </div>
+        <a href="{% url 'discussion:question_discussion' response.question.id %}" class="small no-print"><i class="bi bi-chat-dots"></i> Discuss this question</a>
+        <ul class="list-unstyled small">
+            {% for opt in "ABCD" %}
+            <li class="{% if opt == response.question.correct_option %}text-success fw-bold{% elif opt == response.selected_option %}text-danger{% endif %}">
+                {{ opt }}. {% if opt == "A" %}{{ response.question.option_a }}{% elif opt == "B" %}{{ response.question.option_b }}{% elif opt == "C" %}{{ response.question.option_c }}{% else %}{{ response.question.option_d }}{% endif %}
+                {% if opt == response.question.correct_option %} <i class="bi bi-check-circle-fill"></i>{% endif %}
+                {% if opt == response.selected_option and opt != response.question.correct_option %} <i class="bi bi-x-circle-fill"></i>{% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+        {% if response.question.explanation %}
+        <div class="small text-muted mt-2"><strong>Explanation:</strong> {{ response.question.explanation }}</div>
+        {% endif %}
+        {% if response.question.video_solution_url %}
+        <div class="small mt-1 no-print"><a href="{{ response.question.video_solution_url }}" target="_blank"><i class="bi bi-play-circle"></i> Watch video solution</a></div>
+        {% endif %}
+        <div class="small mt-1">Marks awarded: <strong>{{ response.marks_awarded }}</strong></div>
+    </div>
+</div>
+{% endfor %}
+</div>
+{% endblock %}
+{% block extra_js %}
+<script>
+document.querySelectorAll('.bookmark-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+        var qid = btn.dataset.questionId;
+        fetch('/questions/bookmarks/' + qid + '/toggle/', {
+            method: 'POST',
+            headers: { 'X-CSRFToken': '{{ csrf_token }}' },
+        }).then(function (res) { return res.json(); }).then(function (data) {
+            var icon = btn.querySelector('i');
+            if (data.bookmarked) {
+                icon.className = 'bi bi-bookmark-star-fill text-warning';
+            } else {
+                icon.className = 'bi bi-bookmark';
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

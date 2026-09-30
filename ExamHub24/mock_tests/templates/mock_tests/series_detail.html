@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block content %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'mock_tests:series_list' %}">Test Series</a></li>
+        <li class="breadcrumb-item active">{{ series.title }}</li>
+    </ol>
+</nav>
+<h3>{{ series.title }}</h3>
+<p class="text-muted">{{ series.description }}</p>
+{% if series.is_free %}
+    <span class="badge bg-success mb-3">Free Series</span>
+{% else %}
+    <span class="badge bg-warning text-dark mb-3">Premium — Rs. {{ series.price }} / {{ series.validity_days }} days</span>
+{% endif %}
+
+<table class="table table-hover bg-white shadow-sm">
+    <thead>
+        <tr>
+            <th>Test</th>
+            <th>Questions</th>
+            <th>Duration</th>
+            <th>Marks</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for test in tests %}
+        <tr>
+            <td>{{ test.title }}</td>
+            <td>{{ test.total_questions }}</td>
+            <td>{{ test.duration_minutes }} min</td>
+            <td>{{ test.total_marks }}</td>
+            <td><a href="{% url 'mock_tests:test_instructions' test.id %}" class="btn btn-sm btn-primary">Start</a></td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="5" class="text-muted">No tests added to this series yet.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

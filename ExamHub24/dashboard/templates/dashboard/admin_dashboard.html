@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block content %}
+<h3 class="mb-4">Admin Overview</h3>
+<div class="row text-center mb-4">
+    <div class="col-md-2 col-6 mb-3"><div class="card shadow-sm p-3"><h3>{{ total_users }}</h3><small class="text-muted">Total Users</small></div></div>
+    <div class="col-md-2 col-6 mb-3"><div class="card shadow-sm p-3"><h3>{{ total_premium_users }}</h3><small class="text-muted">Premium Users</small></div></div>
+    <div class="col-md-2 col-6 mb-3"><div class="card shadow-sm p-3"><h3>{{ total_tests_conducted }}</h3><small class="text-muted">Tests Conducted</small></div></div>
+    <div class="col-md-2 col-6 mb-3"><div class="card shadow-sm p-3"><h3>{{ active_tests }}</h3><small class="text-muted">Active Mock Tests</small></div></div>
+    <div class="col-md-3 col-6 mb-3"><div class="card shadow-sm p-3"><h3>Rs. {{ total_revenue }}</h3><small class="text-muted">Total Revenue</small></div></div>
+</div>
+
+<h5 class="mb-3">Revenue &amp; Subscriptions</h5>
+<div class="row text-center mb-4">
+    <div class="col-md-3 col-6 mb-3"><div class="card shadow-sm p-3"><h3>Rs. {{ revenue_this_month }}</h3><small class="text-muted">Revenue This Month</small></div></div>
+    <div class="col-md-3 col-6 mb-3"><div class="card shadow-sm p-3"><h3>Rs. {{ mrr }}</h3><small class="text-muted">MRR (normalized)</small></div></div>
+    <div class="col-md-3 col-6 mb-3"><div class="card shadow-sm p-3"><h3>{{ active_subscriptions_count }}</h3><small class="text-muted">Active Subscriptions</small></div></div>
+    <div class="col-md-3 col-6 mb-3"><div class="card shadow-sm p-3"><h3>{{ churn_rate }}%</h3><small class="text-muted">Churn Rate (this month)</small></div></div>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <h6>Recent Successful Orders</h6>
+        <table class="table table-sm">
+            <thead><tr><th>User</th><th>Plan</th><th>Amount</th></tr></thead>
+            <tbody>
+                {% for order in recent_orders %}
+                <tr><td>{{ order.user }}</td><td>{{ order.plan.name }}</td><td>Rs. {{ order.amount }}</td></tr>
+                {% empty %}
+                <tr><td colspan="3" class="text-muted">No successful orders yet.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <a href="{% url 'admin:index' %}" class="btn btn-sm btn-primary">Go to Full Admin Panel</a>
+        <a href="{% url 'dashboard:admin_activity_log' %}" class="btn btn-sm btn-outline-secondary">View Activity Log</a>
+    </div>
+</div>
+{% endblock %}

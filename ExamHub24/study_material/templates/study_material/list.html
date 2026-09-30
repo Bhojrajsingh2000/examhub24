@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block content %}
+<h3 class="mb-4">Study Material</h3>
+<div class="mb-3">
+    <a href="{% url 'study_material:list' %}" class="btn btn-sm {% if not selected_subject %}btn-primary{% else %}btn-outline-primary{% endif %}">All Subjects</a>
+    {% for subject in subjects %}
+    <a href="?subject={{ subject.id }}" class="btn btn-sm {% if selected_subject == subject.id|stringformat:'s' %}btn-primary{% else %}btn-outline-primary{% endif %}">{{ subject.name }}</a>
+    {% endfor %}
+</div>
+
+<h5>Notes &amp; PDFs</h5>
+<div class="list-group mb-4">
+    {% for m in materials %}
+    <div class="list-group-item d-flex justify-content-between align-items-center">
+        <div>
+            <strong>{{ m.title }}</strong>
+            <div class="small text-muted">{{ m.subject.name }} &middot; {{ m.get_material_type_display }}</div>
+        </div>
+        <div>
+            {% if m.is_premium %}<span class="badge bg-warning text-dark me-2">Premium</span>{% endif %}
+            <a href="{% url 'study_material:download' m.id %}" class="btn btn-sm btn-outline-primary">Download</a>
+        </div>
+    </div>
+    {% empty %}
+    <div class="text-center text-muted py-4 w-100">
+        <i class="bi bi-file-earmark-text" style="font-size:2rem;"></i>
+        <p class="mt-2 mb-0">No material uploaded yet.</p>
+    </div>
+    {% endfor %}
+</div>
+
+<h5>Video Lectures</h5>
+<div class="row">
+    {% for v in videos %}
+    <div class="col-md-4 mb-3">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body">
+                <h6>{{ v.title }}</h6>
+                <p class="small text-muted">{{ v.subject.name }} &middot; {{ v.duration }} min</p>
+                <a href="{{ v.video_url }}" target="_blank" class="btn btn-sm btn-outline-primary">Watch</a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="text-center text-muted py-4 w-100">
+        <i class="bi bi-camera-video" style="font-size:2rem;"></i>
+        <p class="mt-2 mb-0">No video lectures uploaded yet.</p>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

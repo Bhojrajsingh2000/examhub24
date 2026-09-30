@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ test.title }} — Attempt{% endblock %}
+{% block extra_css %}
+<style>
+    body { background: #eef1f6; }
+    .navbar, footer { display: none !important; }
+    .q-block { display: none; }
+    .q-block.active { display: block; }
+</style>
+{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center bg-white p-3 rounded shadow-sm mb-3">
+    <h5 class="mb-0">{{ test.title }}</h5>
+    <div id="timer-box">--:--</div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card shadow-sm mb-3" id="question-area">
+            {% for tq in test_questions %}
+            {% with q=tq.question %}
+            <div class="q-block card-body{% if forloop.first %} active{% endif %}" data-index="{{ forloop.counter0 }}" data-qid="{{ q.id }}">
+                <h6 class="text-muted">Question {{ forloop.counter }} of {{ test_questions|length }} &middot; {{ tq.effective_marks }} marks</h6>
+                <p class="fs-5">{{ q.question_text }}</p>
+                {% if q.question_image %}<img src="{{ q.question_image.url }}" class="img-fluid mb-3" style="max-height:250px;" alt="Image accompanying this question">{% endif %}
+                <div class="options">
+                    {% for opt in "ABCD" %}
+                    <div class="form-check mb-2">
+                        <input class="form-check-input option-input" type="radio" name="option_{{ q.id }}" id="opt_{{ q.id }}_{{ opt }}" value="{{ opt }}">
+                        <label class="form-check-label" for="opt_{{ q.id }}_{{ opt }}">
+                            {% if opt == "A" %}{{ q.option_a }}{% elif opt == "B" %}{{ q.option_b }}{% elif opt == "C" %}{{ q.option_c }}{% else %}{{ q.option_d }}{% endif %}
+                        </label>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endwith %}
+            {% endfor %}
+
+            <div class="card-footer d-flex justify-content-between align-items-center flex-wrap gap-2">
+                <div>
+                    <button type="button" class="btn btn-outline-secondary btn-sm" id="clear-btn">Clear Response</button>
+                    <button type="button" class="btn btn-outline-warning btn-sm" id="mark-btn">Mark for Review &amp; Next</button>
+                </div>
+                <small id="save-status" class="text-muted"></small>
+                <div>
+                    <button type="button" class="btn btn-outline-primary btn-sm" id="prev-btn">&laquo; Previous</button>
+                    <button type="button" class="btn btn-primary btn-sm" id="save-next-btn">Save &amp; Next &raquo;</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h6>Question Palette</h6>
+                <div id="q-palette" class="d-flex flex-wrap">
+                    {% for tq in test_questions %}
+                    <button type="button" class="q-nav-btn not-visited" data-index="{{ forloop.counter0 }}">{{ forloop.counter }}</button>
+                    {% endfor %}
+                </div>
+                <hr>
+                <div class="small">
+                    <span class="badge bg-success">&nbsp;</span> Answered
+                    <span class="badge bg-danger ms-2">&nbsp;</span> Not Answered
+                    <span class="badge bg-warning text-dark ms-2">&nbsp;</span> Marked
+                </div>
+                <form method="post" action="{% url 'mock_tests:submit_test' attempt.id %}" id="submit-form" class="mt-3">
+                    {% csrf_token %}
+                    <input type="hidden" name="auto" id="auto-flag" value="0">
+                    <button type="submit" class="btn btn-danger w-100" id="submit-btn">Submit Test</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    window.EXAMHUB = {
+        attemptId: {{ attempt.id }},
+        remainingSeconds: {{ remaining_seconds }},
+        saveAnswerUrl: "{% url 'mock_tests:save_answer' attempt.id %}",
+        csrfToken: "{{ csrf_token }}"
+    };
+</script>
+<script src="{% static 'js/timer.js' %}"></script>
+<script src="{% static 'js/exam.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% load static %}
+<footer class="bg-dark text-light mt-5 py-4">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <img src="{% static 'images/logo-white.svg' %}" alt="{{ SITE_NAME }}" height="34" class="mb-2">
+                <p class="small text-secondary">Your one-stop platform for competitive exam test series, practice questions, current affairs, and performance analytics.</p>
+            </div>
+            <div class="col-md-4 mb-3">
+                <h6>Quick Links</h6>
+                <ul class="list-unstyled small">
+                    <li><a href="{% url 'exams:category_list' %}" class="text-secondary">Exam Categories</a></li>
+                    <li><a href="{% url 'mock_tests:series_list' %}" class="text-secondary">Test Series</a></li>
+                    <li><a href="{% url 'core:about' %}" class="text-secondary">About Us</a></li>
+                    <li><a href="{% url 'core:contact' %}" class="text-secondary">Contact</a></li>
+                </ul>
+            </div>
+            <div class="col-md-4 mb-3">
+                <h6>Contact</h6>
+                <p class="small text-secondary mb-0">support@examhub24.com</p>
+            </div>
+        </div>
+        <hr class="border-secondary">
+        <p class="small text-secondary mb-0 text-center">&copy; {% now "Y" %} ExamHub24. All rights reserved.</p>
+    </div>
+</footer>

@@ -1,0 +1,13 @@
+Django>=5.0,<5.3
+django-environ>=0.11
+django-crispy-forms>=2.1
+crispy-bootstrap5>=2024.2
+whitenoise>=6.6
+Pillow>=10.2
+razorpay>=1.4          # optional — only needed if you configure real RAZORPAY_KEY_ID/SECRET
+sentry-sdk>=2.0         # optional — only needed if you set SENTRY_DSN in .env
+redis>=5.0              # optional — only needed if you set REDIS_URL in .env for shared caching
+coverage>=7.4            # dev only — for `coverage run manage.py test` (see .coveragerc)
+gunicorn>=21.2          # for production deployment
+psycopg2-binary>=2.9    # only needed if using PostgreSQL (remove if using MySQL/SQLite)
+mysqlclient>=2.2         # only needed if using MySQL (remove if using PostgreSQL/SQLite)

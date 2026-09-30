@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block content %}
+<h3 class="mb-4"><i class="bi bi-graph-up-arrow"></i> Affiliate Dashboard</h3>
+
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <p class="mb-1">Your referral link:</p>
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" id="ref-link" value="{{ request.scheme }}://{{ request.get_host }}{% url 'payments:affiliate_link' partner.code %}" readonly>
+            <button class="btn btn-outline-primary" type="button" onclick="navigator.clipboard.writeText(document.getElementById('ref-link').value); this.textContent='Copied!';">Copy</button>
+        </div>
+        <p class="small text-muted mb-0">Commission rate: {{ partner.commission_percent }}% per referred order.</p>
+    </div>
+</div>
+
+<div class="row text-center">
+    <div class="col-md-6 mb-3"><div class="card shadow-sm p-3"><h3>{{ partner.total_referred_orders }}</h3><small class="text-muted">Orders Referred</small></div></div>
+    <div class="col-md-6 mb-3"><div class="card shadow-sm p-3"><h3>Rs. {{ partner.total_earned }}</h3><small class="text-muted">Total Earned</small></div></div>
+</div>
+{% endblock %}

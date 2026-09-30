@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block content %}
+<h3 class="mb-4">Current Affairs</h3>
+
+<form method="get" class="mb-3">
+    {% if selected_category %}<input type="hidden" name="category" value="{{ selected_category }}">{% endif %}
+    <div class="input-group" style="max-width:420px;">
+        <input type="text" name="q" value="{{ query }}" class="form-control" placeholder="Search current affairs...">
+        <button type="submit" class="btn btn-primary"><i class="bi bi-search"></i></button>
+        {% if query %}<a href="?{% if selected_category %}category={{ selected_category }}{% endif %}" class="btn btn-outline-secondary">Clear</a>{% endif %}
+    </div>
+</form>
+
+<div class="mb-3">
+    <a href="?{% if query %}q={{ query }}{% endif %}" class="btn btn-sm {% if not selected_category %}btn-primary{% else %}btn-outline-primary{% endif %}">All</a>
+    {% for value, label in categories %}
+    <a href="?category={{ value }}{% if query %}&q={{ query }}{% endif %}" class="btn btn-sm {% if selected_category == value %}btn-primary{% else %}btn-outline-primary{% endif %}">{{ label }}</a>
+    {% endfor %}
+</div>
+
+<div class="list-group">
+    {% for item in affairs %}
+    <a href="{% url 'current_affairs:detail' item.id %}" class="list-group-item list-group-item-action">
+        <div class="d-flex justify-content-between">
+            <h6 class="mb-1">{{ item.title }}</h6>
+            <small class="text-muted">{{ item.date }}</small>
+        </div>
+        <p class="mb-1 small text-muted">{{ item.content|truncatewords:25 }}</p>
+        <span class="badge bg-light text-dark border">{{ item.get_category_display }}</span>
+    </a>
+    {% empty %}
+    <p class="text-muted">{% if query %}No current affairs match "{{ query }}".{% else %}No current affairs published yet.{% endif %}</p>
+    {% endfor %}
+</div>
+{% include 'partials/pagination.html' %}
+{% endblock %}

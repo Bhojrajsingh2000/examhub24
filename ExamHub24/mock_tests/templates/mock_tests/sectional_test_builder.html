@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-7">
+        <h3 class="mb-2"><i class="bi bi-sliders"></i> Build a Sectional Test</h3>
+        <p class="text-muted mb-4">{{ subject.name }} — pick specific topics (or leave blank for the whole subject), how many questions, and a time limit.</p>
+
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label class="form-label">Topics (optional — leave unchecked to include the whole subject)</label>
+                <div class="border rounded p-3">
+                    {% for tag in available_tags %}
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="tags" value="{{ tag.id }}" id="tag_{{ tag.id }}"
+                               {% if tag.id == preselected_tag_id %}checked{% endif %}>
+                        <label class="form-check-label" for="tag_{{ tag.id }}">{{ tag.name }}</label>
+                    </div>
+                    {% empty %}
+                    <p class="text-muted small mb-0">No tagged topics yet for this subject — your test will draw from all its questions.</p>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6 mb-3">
+                    <label class="form-label">Number of Questions</label>
+                    <input type="number" name="question_count" class="form-control" value="10" min="1" max="50">
+                </div>
+                <div class="col-6 mb-3">
+                    <label class="form-label">Duration (minutes)</label>
+                    <input type="number" name="duration_minutes" class="form-control" value="15" min="2" max="120">
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary w-100"><i class="bi bi-lightning-charge"></i> Generate Test</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
